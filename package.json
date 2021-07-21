@@ -1,0 +1,32 @@
+{
+  "name": "axel",
+  "version": "0.0.1",
+  "description": "Axel is here to help you!",
+  "main": "./server/index.js",
+  "scripts": {
+    "start": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kerolly/Axel.git"
+  },
+  "keywords": [
+    "axel",
+    "bot",
+    "discord"
+  ],
+  "author": "Ticarat Andrei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kerolly/Axel/issues"
+  },
+  "homepage": "https://github.com/Kerolly/Axel#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "node": "^16.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
