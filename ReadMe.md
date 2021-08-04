@@ -2,3 +2,4 @@ Commands
 
 !ping
 !youtube
+!clear

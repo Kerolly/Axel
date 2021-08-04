@@ -46,6 +46,12 @@ client.on("message", (message) => {
     case "youtube":
       client.commands.get("youtube").execute(message, args);
       break;
+
+    case "clear":
+      client.commands.get("clear").execute(message, args);
+      break;
+
+    
   }
 
   // if (command == 'ping') {
