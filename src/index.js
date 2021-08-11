@@ -3,14 +3,14 @@ const fs = require("fs");
 const client = new Discord.Client();
 require("dotenv").config();
 
-const memberCounter = require('./counters/memberCounter')
-
+const memberCounter = require("./counters/memberCounter");
 
 const prefix = process.env.PREFIX;
 
 client.on("ready", () => {
   console.log(`Logged is as ${client.user.tag}`);
-  memberCounter(client)});
+  memberCounter(client);
+});
 
 // Read files from Commands file
 client.commands = new Discord.Collection();
@@ -54,7 +54,17 @@ client.on("message", (message) => {
       client.commands.get("clear").execute(message, args);
       break;
 
-    
+    case 'play':
+      client.commands.get("play").execute(client, message, args);
+      break;
+
+      case 'stop':
+      client.commands.get("stop").execute(client, message, args);
+      break;
+
+      case 'skip':
+      client.commands.get("skip").execute(client, message, args);
+      break;
   }
 
   // if (command == 'ping') {
@@ -62,5 +72,23 @@ client.on("message", (message) => {
   //   return;
   // }
 });
+
+// Create a new Distube
+const distube = require("distube");
+client.distube = new distube(client, { searchSongs: false, emitNewSongOnly: true });
+// client.distube
+//   .on("playSong", (message, queue, song) => {
+//     message.channel.send(
+//       `Playing \ ${song.name} - ${song.formattedDuration} \n Required by ${song.user}`
+//     );
+//   })
+//   .on("addSong", (message, queue, song) => {
+//     message.channel.send(
+//       `Added ${song.name} - \ ${song.formattedDuration} to the queue by ${song.user}`
+//     );
+//   })
+//   .on('error', (message, error) => {
+//     message.channel.send(`There is an error: ${error}`)
+//   })
 
 client.login(process.env.DISCORD_TOKEN);
