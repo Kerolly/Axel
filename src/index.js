@@ -40,14 +40,6 @@ client.on("message", (message) => {
 
   // Commands
 
-  // if(command === 'play') {
-
-  //     const music = args.join(" ");
-  //     if (!music) return message.reply("You need to specify a music");
-
-  //     client.distube.play(message, music);
-  // }
-
   switch (command) {
     case "ping":
     case "pi":
@@ -62,34 +54,7 @@ client.on("message", (message) => {
       client.commands.get("clear").execute(message, args);
       break;
 
-    case "play":
-    case "p":
-      if (!message.member.voice.channel)
-        return message.reply("You need to be in a voice channel");
-
-      const music = args.join(" ");
-      if (!music) return message.reply("You need to specify a music");
-
-      client.distube.play(message, music);
-      break;
-
-    case "stop":
-    case "st":
-      if (!message.member.voice.channel)
-        return message.reply("You need to be in a voice channel");
-
-      client.distube.stop(message);
-      message.reply("**Stopped the music**");
-      break;
-
-    case "skip":
-    case "sk":
-      if (!message.member.voice.channel)
-        return message.reply("You need to be in a voice channel");
-
-      client.distube.skip(message);
-      message.reply("**Skiped the music**");
-      break;
+    
   }
 
   // if (command == 'ping') {
@@ -97,39 +62,5 @@ client.on("message", (message) => {
   //   return;
   // }
 });
-
-// Create a new Distube
-const Distube = require("distube");
-client.distube = new Distube(client, {
-  searchSongs: false,
-  emitNewSongOnly: true,
-});
-
-const status = (queue) =>
-  `Volume: \`${queue.volume}%\` | Filter: \`${
-    queue.filter || "Off"
-  }\` | Loop: \`${
-    queue.repeatMode
-      ? queue.repeatMode === 2
-        ? "All Queue"
-        : "This Song"
-      : "Off"
-  }\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``;
-client.distube
-  .on("playSong", (message, queue, song) => {
-    message.channel.send(
-      `Playing \ ${song.name} - ${song.formattedDuration} \n Required by ${
-        song.user
-      } \n ${status(queue)}`
-    );
-  })
-  .on("addSong", (message, queue, song) => {
-    message.channel.send(
-      `Added ${song.name} - \ ${song.formattedDuration} to the queue by ${song.user}`
-    );
-  })
-  .on("error", (message, error) => {
-    message.channel.send(`There is an error: ${error}`);
-  });
 
 client.login(process.env.DISCORD_TOKEN);
