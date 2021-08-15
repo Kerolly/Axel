@@ -3,14 +3,11 @@ const fs = require("fs");
 const client = new Discord.Client();
 require("dotenv").config();
 
-const memberCounter = require('./counters/memberCounter')
-
-
 const prefix = process.env.PREFIX;
 
 client.on("ready", () => {
   console.log(`Logged is as ${client.user.tag}`);
-  memberCounter(client)});
+});
 
 // Read files from Commands file
 client.commands = new Discord.Collection();
