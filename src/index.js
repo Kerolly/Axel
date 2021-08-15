@@ -54,16 +54,30 @@ client.on("message", (message) => {
       client.commands.get("clear").execute(message, args);
       break;
 
-    case 'play':
-      client.commands.get("play").execute(client, message, args);
+    case "play":
+      if (!message.member.voiceChannel)
+        return message.client.send("You need to be in a voice channel");
+
+      const music = args.join(" ");
+      if (!music) return message.reply("You need to specify a music");
+
+      client.distube.play(message, music);
       break;
 
-      case 'stop':
-      client.commands.get("stop").execute(client, message, args);
+    case "stop":
+      if (!message.member.voiceChannel)
+        return message.reply("You need to be in a voice channel");
+
+      client.distube.stop(message);
+      message.reply("**Stopped the music**");
       break;
 
-      case 'skip':
-      client.commands.get("skip").execute(client, message, args);
+    case "skip":
+      if (!message.member.voiceChannel)
+        return message.reply("You need to be in a voice channel");
+
+      client.distube.skip(message);
+      message.reply("**Skiped the music**");
       break;
   }
 
@@ -75,20 +89,23 @@ client.on("message", (message) => {
 
 // Create a new Distube
 const distube = require("distube");
-client.distube = new distube(client, { searchSongs: false, emitNewSongOnly: true });
-// client.distube
-//   .on("playSong", (message, queue, song) => {
-//     message.channel.send(
-//       `Playing \ ${song.name} - ${song.formattedDuration} \n Required by ${song.user}`
-//     );
-//   })
-//   .on("addSong", (message, queue, song) => {
-//     message.channel.send(
-//       `Added ${song.name} - \ ${song.formattedDuration} to the queue by ${song.user}`
-//     );
-//   })
-//   .on('error', (message, error) => {
-//     message.channel.send(`There is an error: ${error}`)
-//   })
+client.distube = new distube(client, {
+  searchSongs: false,
+  emitNewSongOnly: true,
+});
+client.distube
+  .on("playSong", (message, queue, song) => {
+    message.channel.send(
+      `Playing \ ${song.name} - ${song.formattedDuration} \n Required by ${song.user}`
+    );
+  })
+  .on("addSong", (message, queue, song) => {
+    message.channel.send(
+      `Added ${song.name} - \ ${song.formattedDuration} to the queue by ${song.user}`
+    );
+  })
+  .on("error", (message, error) => {
+    message.channel.send(`There is an error: ${error}`);
+  });
 
 client.login(process.env.DISCORD_TOKEN);
