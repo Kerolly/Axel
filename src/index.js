@@ -55,8 +55,9 @@ client.on("message", (message) => {
       break;
 
     case "play":
-      if (!message.member.voiceChannel)
-        return message.client.send("You need to be in a voice channel");
+    case "p":
+      if (!message.member.voice.channel)
+        return message.reply("You need to be in a voice channel");
 
       const music = args.join(" ");
       if (!music) return message.reply("You need to specify a music");
@@ -65,19 +66,21 @@ client.on("message", (message) => {
       break;
 
     case "stop":
-      if (!message.member.voiceChannel)
-        return message.reply("You need to be in a voice channel");
+    case "st":
+      if (!message.member.voice.channel)
+        return message.reply("(❁´◡`❁) You need to be in a voice channel");
 
       client.distube.stop(message);
-      message.reply("**Stopped the music**");
+      message.reply("**Stopped the music 👍**");
       break;
 
     case "skip":
-      if (!message.member.voiceChannel)
+    case "sk":
+      if (!message.member.voice.channel)
         return message.reply("You need to be in a voice channel");
 
       client.distube.skip(message);
-      message.reply("**Skiped the music**");
+      message.reply("**🔥 Skiped the music 🔥**");
       break;
   }
 
