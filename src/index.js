@@ -3,7 +3,8 @@ const fs = require("fs");
 const client = new Discord.Client();
 require("dotenv").config();
 
-const memberCounter = require("./counters/memberCounter");
+const memberCounter = require("./counters/memberCounter"); // member counter
+
 
 const prefix = process.env.PREFIX;
 
@@ -11,6 +12,14 @@ client.on("ready", () => {
   console.log(`Logged is as ${client.user.tag}`);
   memberCounter(client);
 });
+
+client.on('guildMemberAdd', member =>{
+
+  const channel = member.guild.channels.cache.find(channel => channel.name === 'welcome')
+  if(!channel) return;
+
+  channel.send(`${member} welcome to my server. \n Please respect the rules`)
+})
 
 // Read files from Commands file
 client.commands = new Discord.Collection();
@@ -57,10 +66,10 @@ client.on("message", (message) => {
     case "play":
     case "p":
       if (!message.member.voice.channel)
-        return message.reply("You need to be in a voice channel");
+        return message.reply('You must be in a voice channel');
 
       const music = args.join(" ");
-      if (!music) return message.reply("You need to specify a music");
+      if (!music) return message.reply("Please specify the music");
 
       client.distube.play(message, music);
       break;
@@ -68,7 +77,7 @@ client.on("message", (message) => {
     case "stop":
     case "st":
       if (!message.member.voice.channel)
-        return message.reply("(❁´◡`❁) You need to be in a voice channel");
+        return message.reply('You must be in a voice channel');
 
       client.distube.stop(message);
       message.reply("**Stopped the music 👍**");
@@ -77,7 +86,7 @@ client.on("message", (message) => {
     case "skip":
     case "sk":
       if (!message.member.voice.channel)
-        return message.reply("You need to be in a voice channel");
+        return message.reply('You must be in a voice channel');
 
       client.distube.skip(message);
       message.reply("**🔥 Skiped the music 🔥**");
@@ -96,6 +105,8 @@ client.distube = new distube(client, {
   searchSongs: false,
   emitNewSongOnly: true,
 });
+
+
 client.distube
   .on("playSong", (message, queue, song) => {
     message.channel.send(
