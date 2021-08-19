@@ -5,7 +5,6 @@ require("dotenv").config();
 
 const memberCounter = require("./counters/memberCounter"); // member counter
 
-
 const prefix = process.env.PREFIX;
 
 client.on("ready", () => {
@@ -13,13 +12,14 @@ client.on("ready", () => {
   memberCounter(client);
 });
 
-client.on('guildMemberAdd', member =>{
+client.on("guildMemberAdd", (member) => {
+  const channel = member.guild.channels.cache.find(
+    (channel) => channel.name === "welcome"
+  );
+  if (!channel) return;
 
-  const channel = member.guild.channels.cache.find(channel => channel.name === 'welcome')
-  if(!channel) return;
-
-  channel.send(`${member} welcome to my server. \n Please respect the rules`)
-})
+  channel.send(`${member} welcome to my server. \n Please respect the rules`);
+});
 
 // Read files from Commands file
 client.commands = new Discord.Collection();
@@ -27,9 +27,19 @@ client.commands = new Discord.Collection();
 const commandFiles = fs
   .readdirSync("./src/commands/")
   .filter((file) => file.endsWith(".js"));
+
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
 
+  client.commands.set(command.name, command);
+}
+
+const musicFiles = fs
+  .readdirSync("./src/commands/music")
+  .filter((file) => file.endsWith(".js"));
+
+for (const file of musicFiles) {
+  const command = require(`./commands/music/${file}`);
   client.commands.set(command.name, command);
 }
 
@@ -65,31 +75,35 @@ client.on("message", (message) => {
 
     case "play":
     case "p":
-      if (!message.member.voice.channel)
-        return message.reply('You must be in a voice channel');
-
-      const music = args.join(" ");
-      if (!music) return message.reply("Please specify the music");
-
-      client.distube.play(message, music);
+      client.commands.get("play").execute(client, message, args);
       break;
 
     case "stop":
     case "st":
-      if (!message.member.voice.channel)
-        return message.reply('You must be in a voice channel');
-
-      client.distube.stop(message);
-      message.reply("**Stopped the music 👍**");
+      client.commands.get("stop").execute(client, message, args);
       break;
 
     case "skip":
     case "sk":
-      if (!message.member.voice.channel)
-        return message.reply('You must be in a voice channel');
+      client.commands.get("skip").execute(client, message, args);
+      break;
 
-      client.distube.skip(message);
-      message.reply("**🔥 Skiped the music 🔥**");
+    case "queue":
+    case "q":
+      client.commands.get("queue").execute(client, message, args);
+      break;
+
+    case "loop":
+    case "l":
+    case "repeat":
+    case "r":
+      client.commands.get("loop").execute(client, message, args);
+      break;
+
+    case "volume":
+    case "set-volume":
+    case "v":
+      client.commands.get("volume").execute(client, message, args);
       break;
   }
 
@@ -105,7 +119,6 @@ client.distube = new distube(client, {
   searchSongs: false,
   emitNewSongOnly: true,
 });
-
 
 client.distube
   .on("playSong", (message, queue, song) => {
