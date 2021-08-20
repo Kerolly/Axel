@@ -4,7 +4,7 @@
   "description": "Axel is here to help you!",
   "main": "./src/index.js",
   "scripts": {
-    "start": "nodemon ."
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -28,10 +28,9 @@
     "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.0",
     "node": "^16.5.0",
+    "nodemin": "^1.0.1",
     "opusscript": "0.0.8",
     "ytdl-core": "^4.9.1"
   },
-  "devDependencies": {
-    "nodemon": "^2.0.12"
-  }
+  "devDependencies": {}
 }
