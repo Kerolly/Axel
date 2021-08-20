@@ -4,7 +4,7 @@
   "description": "Axel is here to help you!",
   "main": "./src/index.js",
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "nodemon ."
   },
   "repository": {
     "type": "git",
